@@ -12,24 +12,32 @@ namespace AddressBook
             while (running)
             {
                 Console.WriteLine("\n=== Address Book Menu ===");
-                Console.WriteLine("1. Create Contact");              
-                Console.WriteLine("2. Exit");
+                Console.WriteLine("1. Create Contact");
+                Console.WriteLine("2. Add New Contact");
+                Console.WriteLine("3. Exit");
                 Console.Write("Choose an option: ");
 
                 string? choice = Console.ReadLine();
 
                 switch (choice)
-                {
+                
+                    {
                     case "1":
-                        CreateContact(service);
+                        Console.WriteLine("\n--- Create First Contact ---");
+                        CreateOrAddContact(service);
+                        break;
+
+                    case "2":
+                        Console.WriteLine("\n--- Add New Contact ---");
+                        CreateOrAddContact(service);
                         break;
 
                     case "5":
                         running = false;
                         break;
-                    case "2":
                     case "3":
                     case "4":
+                    
                         
                         break;
 
@@ -40,10 +48,8 @@ namespace AddressBook
             }
         }
 
-        static void CreateContact(AddressBookService service)
+        static void CreateOrAddContact(AddressBookService service)
         {
-            Console.WriteLine("\n=== Create New Contact ===");
-
             var contact = new Contact();
 
             Console.Write("First Name: ");
@@ -72,8 +78,8 @@ namespace AddressBook
 
             service.AddContact(contact);
 
-            Console.WriteLine("\nContact Created Successfully!");
-            Console.WriteLine("-----------------------------");
+            Console.WriteLine("\nContact Successfully Added!");
+            Console.WriteLine("--------------------------------");
             Console.WriteLine(contact);
         }
     }
