@@ -15,14 +15,15 @@ namespace AddressBook
                 Console.WriteLine("1. Create Contact");
                 Console.WriteLine("2. Add New Contact");
                 Console.WriteLine("3. Edit Contact");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("4. Delete Contact");
+                Console.WriteLine("5. Exit");
                 Console.Write("Choose an option: ");
 
                 string? choice = Console.ReadLine();
 
                 switch (choice)
-                
-                    {
+
+                {
                     case "1":
                         Console.WriteLine("\n--- Create First Contact ---");
                         CreateOrAddContact(service);
@@ -35,14 +36,17 @@ namespace AddressBook
                     case "3":
                         EditContact(service);
                         break;
+                    case "4":
+                        DeleteContact(service);
+                        break;
 
                     case "5":
                         running = false;
                         break;
-                    
-                    case "4":
-                    
-                        
+
+
+
+
                         break;
 
                     default:
@@ -146,6 +150,28 @@ namespace AddressBook
 
             Console.WriteLine("\nContact Updated Successfully!");
             Console.WriteLine(existing);
+        }
+        static void DeleteContact(AddressBookService service)
+        {
+            Console.Write("\nEnter FIRST NAME of contact to delete: ");
+            string? name = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                return;
+            }
+
+            bool deleted = service.DeleteContact(name);
+
+            if (deleted)
+            {
+                Console.WriteLine("Contact Deleted Successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Contact not found.");
+            }
         }
     }
 }
