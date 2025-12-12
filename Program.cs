@@ -21,37 +21,44 @@ namespace AddressBook
 
                 string? choice = Console.ReadLine();
 
-                switch (choice)
-
+                try
                 {
-                    case "1":
-                        Console.WriteLine("\n--- Create First Contact ---");
-                        CreateOrAddContact(service);
-                        break;
+                    switch (choice)
+                    {
+                        case "1":
+                            Console.WriteLine("\n--- Create First Contact ---");
+                            CreateOrAddContact(service);
+                            break;
 
-                    case "2":
-                        Console.WriteLine("\n--- Add New Contact ---");
-                        CreateOrAddContact(service);
-                        break;
-                    case "3":
-                        EditContact(service);
-                        break;
-                    case "4":
-                        DeleteContact(service);
-                        break;
+                        case "2":
+                            Console.WriteLine("\n--- Add New Contact ---");
+                            CreateOrAddContact(service);
+                            break;
 
-                    case "5":
-                        running = false;
-                        break;
+                        case "3":
+                            EditContact(service);
+                            break;
 
+                        case "4":
+                            DeleteContact(service);
+                            break;
 
+                        case "5":
+                            running = false;
+                            break;
 
-
-                        break;
-
-                    default:
-                        Console.WriteLine("Invalid option. Try again.");
-                        break;
+                        default:
+                            Console.WriteLine("Invalid option. Try again.");
+                            break;
+                    }
+                }
+                catch (ContactNotFoundException ex)
+                {
+                    Console.WriteLine($"ERROR: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Validation Error: {ex.Message}");
                 }
             }
         }
@@ -90,24 +97,13 @@ namespace AddressBook
             Console.WriteLine("--------------------------------");
             Console.WriteLine(contact);
         }
+
         static void EditContact(AddressBookService service)
         {
             Console.Write("\nEnter FIRST NAME of contact to edit: ");
             string? name = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                Console.WriteLine("Name cannot be empty.");
-                return;
-            }
-
             var existing = service.FindContactByName(name);
-
-            if (existing == null)
-            {
-                Console.WriteLine("Contact not found.");
-                return;
-            }
 
             Console.WriteLine("\nContact Found:");
             Console.WriteLine(existing);
@@ -132,7 +128,8 @@ namespace AddressBook
             updated.City = string.IsNullOrWhiteSpace(city) ? existing.City : city;
 
             Console.Write($"State ({existing.State}): ");
-            string? state = Console.ReadLine(); updated.State = string.IsNullOrWhiteSpace(state) ? existing.State : state;
+            string? state = Console.ReadLine();
+            updated.State = string.IsNullOrWhiteSpace(state) ? existing.State : state;
 
             Console.Write($"Zip ({existing.Zip}): ");
             string? zip = Console.ReadLine();
@@ -151,26 +148,17 @@ namespace AddressBook
             Console.WriteLine("\nContact Updated Successfully!");
             Console.WriteLine(existing);
         }
+
         static void DeleteContact(AddressBookService service)
         {
             Console.Write("\nEnter FIRST NAME of contact to delete: ");
             string? name = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                Console.WriteLine("Name cannot be empty.");
-                return;
-            }
 
             bool deleted = service.DeleteContact(name);
 
             if (deleted)
             {
                 Console.WriteLine("Contact Deleted Successfully!");
-            }
-            else
-            {
-                Console.WriteLine("Contact not found.");
             }
         }
     }
