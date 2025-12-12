@@ -13,7 +13,7 @@ namespace AddressBook
             {
                 Console.WriteLine("\n=== Address Book Menu ===");
                 Console.WriteLine("1. Create Contact");
-                Console.WriteLine("2. Add New Contact");
+                Console.WriteLine("2. Add Multiple Contacts");
                 Console.WriteLine("3. Edit Contact");
                 Console.WriteLine("4. Delete Contact");
                 Console.WriteLine("5. Exit");
@@ -27,12 +27,12 @@ namespace AddressBook
                     {
                         case "1":
                             Console.WriteLine("\n--- Create First Contact ---");
-                            CreateOrAddContact(service);
+                            CreateSingleContact(service);
                             break;
 
                         case "2":
-                            Console.WriteLine("\n--- Add New Contact ---");
-                            CreateOrAddContact(service);
+                            Console.WriteLine("\n--- Add Multiple Contacts ---");
+                            AddMultipleContacts(service);
                             break;
 
                         case "3":
@@ -62,8 +62,32 @@ namespace AddressBook
                 }
             }
         }
+        static void CreateSingleContact(AddressBookService service)
+        {
+            var contact = ReadContactFromConsole();
+            service.AddContact(contact);
+            Console.WriteLine("\nContact Successfully Created!");
+            Console.WriteLine(contact);
+        }
+        static void AddMultipleContacts(AddressBookService service)
+        {
+            bool addMore = true;
 
-        static void CreateOrAddContact(AddressBookService service)
+            while (addMore)
+            {
+                var contact = ReadContactFromConsole();
+                service.AddContact(contact);
+
+                Console.WriteLine("\nContact Added Successfully!");
+                Console.WriteLine(contact);
+
+                Console.Write("\nDo you want to add another contact? (y/n): ");
+                string? choice = Console.ReadLine();
+
+                addMore = choice?.ToLower() == "y";
+            }
+        }
+        static Contact ReadContactFromConsole()
         {
             var contact = new Contact();
 
@@ -91,11 +115,7 @@ namespace AddressBook
             Console.Write("Email: ");
             contact.Email = Console.ReadLine() ?? string.Empty;
 
-            service.AddContact(contact);
-
-            Console.WriteLine("\nContact Successfully Added!");
-            Console.WriteLine("--------------------------------");
-            Console.WriteLine(contact);
+            return contact;
         }
 
         static void EditContact(AddressBookService service)
@@ -105,50 +125,15 @@ namespace AddressBook
 
             var existing = service.FindContactByName(name);
 
-            Console.WriteLine("\nContact Found:");
+            Console.WriteLine("\nEditing Contact:");
             Console.WriteLine(existing);
-            Console.WriteLine("\nEnter new details (press Enter to keep old value):");
 
-            var updated = new Contact();
-
-            Console.Write($"First Name ({existing.FirstName}): ");
-            string? first = Console.ReadLine();
-            updated.FirstName = string.IsNullOrWhiteSpace(first) ? existing.FirstName : first;
-
-            Console.Write($"Last Name ({existing.LastName}): ");
-            string? last = Console.ReadLine();
-            updated.LastName = string.IsNullOrWhiteSpace(last) ? existing.LastName : last;
-
-            Console.Write($"Address ({existing.Address}): ");
-            string? address = Console.ReadLine();
-            updated.Address = string.IsNullOrWhiteSpace(address) ? existing.Address : address;
-
-            Console.Write($"City ({existing.City}): ");
-            string? city = Console.ReadLine();
-            updated.City = string.IsNullOrWhiteSpace(city) ? existing.City : city;
-
-            Console.Write($"State ({existing.State}): ");
-            string? state = Console.ReadLine();
-            updated.State = string.IsNullOrWhiteSpace(state) ? existing.State : state;
-
-            Console.Write($"Zip ({existing.Zip}): ");
-            string? zip = Console.ReadLine();
-            updated.Zip = string.IsNullOrWhiteSpace(zip) ? existing.Zip : zip;
-
-            Console.Write($"Phone ({existing.PhoneNumber}): ");
-            string? phone = Console.ReadLine();
-            updated.PhoneNumber = string.IsNullOrWhiteSpace(phone) ? existing.PhoneNumber : phone;
-
-            Console.Write($"Email ({existing.Email}): ");
-            string? email = Console.ReadLine();
-            updated.Email = string.IsNullOrWhiteSpace(email) ? existing.Email : email;
+            var updated = ReadContactFromConsole();
 
             service.UpdateContact(existing, updated);
 
             Console.WriteLine("\nContact Updated Successfully!");
-            Console.WriteLine(existing);
         }
-
         static void DeleteContact(AddressBookService service)
         {
             Console.Write("\nEnter FIRST NAME of contact to delete: ");
