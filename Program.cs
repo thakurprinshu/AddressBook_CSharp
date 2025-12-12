@@ -14,7 +14,8 @@ namespace AddressBook
                 Console.WriteLine("\n=== Address Book Menu ===");
                 Console.WriteLine("1. Create Contact");
                 Console.WriteLine("2. Add New Contact");
-                Console.WriteLine("3. Exit");
+                Console.WriteLine("3. Edit Contact");
+                Console.WriteLine("4. Exit");
                 Console.Write("Choose an option: ");
 
                 string? choice = Console.ReadLine();
@@ -31,11 +32,14 @@ namespace AddressBook
                         Console.WriteLine("\n--- Add New Contact ---");
                         CreateOrAddContact(service);
                         break;
+                    case "3":
+                        EditContact(service);
+                        break;
 
                     case "5":
                         running = false;
                         break;
-                    case "3":
+                    
                     case "4":
                     
                         
@@ -81,6 +85,67 @@ namespace AddressBook
             Console.WriteLine("\nContact Successfully Added!");
             Console.WriteLine("--------------------------------");
             Console.WriteLine(contact);
+        }
+        static void EditContact(AddressBookService service)
+        {
+            Console.Write("\nEnter FIRST NAME of contact to edit: ");
+            string? name = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Name cannot be empty.");
+                return;
+            }
+
+            var existing = service.FindContactByName(name);
+
+            if (existing == null)
+            {
+                Console.WriteLine("Contact not found.");
+                return;
+            }
+
+            Console.WriteLine("\nContact Found:");
+            Console.WriteLine(existing);
+            Console.WriteLine("\nEnter new details (press Enter to keep old value):");
+
+            var updated = new Contact();
+
+            Console.Write($"First Name ({existing.FirstName}): ");
+            string? first = Console.ReadLine();
+            updated.FirstName = string.IsNullOrWhiteSpace(first) ? existing.FirstName : first;
+
+            Console.Write($"Last Name ({existing.LastName}): ");
+            string? last = Console.ReadLine();
+            updated.LastName = string.IsNullOrWhiteSpace(last) ? existing.LastName : last;
+
+            Console.Write($"Address ({existing.Address}): ");
+            string? address = Console.ReadLine();
+            updated.Address = string.IsNullOrWhiteSpace(address) ? existing.Address : address;
+
+            Console.Write($"City ({existing.City}): ");
+            string? city = Console.ReadLine();
+            updated.City = string.IsNullOrWhiteSpace(city) ? existing.City : city;
+
+            Console.Write($"State ({existing.State}): ");
+            string? state = Console.ReadLine(); updated.State = string.IsNullOrWhiteSpace(state) ? existing.State : state;
+
+            Console.Write($"Zip ({existing.Zip}): ");
+            string? zip = Console.ReadLine();
+            updated.Zip = string.IsNullOrWhiteSpace(zip) ? existing.Zip : zip;
+
+            Console.Write($"Phone ({existing.PhoneNumber}): ");
+            string? phone = Console.ReadLine();
+            updated.PhoneNumber = string.IsNullOrWhiteSpace(phone) ? existing.PhoneNumber : phone;
+
+            Console.Write($"Email ({existing.Email}): ");
+            string? email = Console.ReadLine();
+            updated.Email = string.IsNullOrWhiteSpace(email) ? existing.Email : email;
+
+            service.UpdateContact(existing, updated);
+
+            Console.WriteLine("\nContact Updated Successfully!");
+            Console.WriteLine(existing);
         }
     }
 }

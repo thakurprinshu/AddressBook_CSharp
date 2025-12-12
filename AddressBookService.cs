@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AddressBook
 {
@@ -19,6 +16,26 @@ namespace AddressBook
         public List<Contact> GetAllContacts()
         {
             return _contacts;
+        }
+
+        public Contact? FindContactByName(string name)
+        {
+            return _contacts.FirstOrDefault(c =>
+                c.FirstName.Equals(name, System.StringComparison.OrdinalIgnoreCase));
+        }
+
+        public bool UpdateContact(Contact existing, Contact updated)
+        {
+            existing.FirstName = updated.FirstName;
+            existing.LastName = updated.LastName;
+            existing.Address = updated.Address;
+            existing.City = updated.City;
+            existing.State = updated.State;
+            existing.Zip = updated.Zip;
+            existing.PhoneNumber = updated.PhoneNumber;
+            existing.Email = updated.Email;
+
+            return true;
         }
     }
 }
